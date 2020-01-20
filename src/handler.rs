@@ -180,7 +180,7 @@ where
     A::Context: AsyncContext<A>,
 {
     fn handle<R: ResponseChannel<M>>(self, _: &mut A::Context, tx: Option<R>) {
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             if let Some(tx) = tx {
                 tx.send(self.await)
             }
@@ -237,7 +237,7 @@ where
     fn handle<R: ResponseChannel<M>>(self, _: &mut A::Context, tx: Option<R>) {
         match self.item {
             ResponseTypeItem::Fut(fut) => {
-                actix_rt::spawn(async move {
+                actori_rt::spawn(async move {
                     if let Some(tx) = tx {
                         tx.send(fut.await);
                     }

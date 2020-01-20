@@ -3,7 +3,7 @@ use std::mem::drop;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
-use actix::prelude::*;
+use actori::prelude::*;
 use tokio::time::{delay_for, Duration};
 
 #[derive(Debug)]
@@ -16,10 +16,10 @@ impl Message for Ping {
 struct MyActor(Arc<AtomicUsize>);
 
 impl Actor for MyActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 }
 
-impl actix::Handler<Ping> for MyActor {
+impl actori::Handler<Ping> for MyActor {
     type Result = ();
 
     fn handle(&mut self, _: Ping, _: &mut Self::Context) {
@@ -33,10 +33,10 @@ impl Actor for MyActor3 {
     type Context = Context<Self>;
 }
 
-impl actix::Handler<Ping> for MyActor3 {
+impl actori::Handler<Ping> for MyActor3 {
     type Result = ();
 
-    fn handle(&mut self, _: Ping, _: &mut actix::Context<MyActor3>) -> Self::Result {
+    fn handle(&mut self, _: Ping, _: &mut actori::Context<MyActor3>) -> Self::Result {
         System::current().stop();
     }
 }
@@ -115,7 +115,7 @@ fn test_sync_recipient_call() {
         let addr2 = addr.clone().recipient();
         addr.do_send(Ping(0));
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             let _ = addr2.send(Ping(1)).await;
             let _ = addr2.send(Ping(2)).await;
             System::current().stop();
@@ -131,7 +131,7 @@ fn test_error_result() {
     System::run(|| {
         let addr = MyActor3.start();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             let res = addr.send(Ping(0)).await;
             match res {
                 Ok(_) => (),
@@ -145,7 +145,7 @@ fn test_error_result() {
 struct TimeoutActor;
 
 impl Actor for TimeoutActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 }
 
 impl Handler<Ping> for TimeoutActor {
@@ -167,7 +167,7 @@ fn test_message_timeout() {
         let addr = TimeoutActor.start();
 
         addr.do_send(Ping(0));
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             let res = addr.send(Ping(0)).timeout(Duration::new(0, 1_000)).await;
             match res {
                 Ok(_) => panic!("Should not happen"),

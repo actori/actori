@@ -2,7 +2,7 @@ use std::sync;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::Arc;
 
-use actix::prelude::*;
+use actori::prelude::*;
 use tokio::time::{delay_for, Duration, Instant};
 
 #[derive(Debug)]
@@ -15,7 +15,7 @@ impl Message for Num {
 struct MyActor(Arc<AtomicUsize>, Arc<AtomicBool>, Running);
 
 impl Actor for MyActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 
     fn stopping(&mut self, _: &mut Self::Context) -> Running {
         System::current().stop();
@@ -33,7 +33,7 @@ impl StreamHandler<Num> for MyActor {
     }
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_stream() {
     let count = Arc::new(AtomicUsize::new(0));
     let err = Arc::new(AtomicBool::new(false));
@@ -62,7 +62,7 @@ struct MySyncActor {
 }
 
 impl Actor for MySyncActor {
-    type Context = actix::SyncContext<Self>;
+    type Context = actori::SyncContext<Self>;
 
     fn started(&mut self, _: &mut Self::Context) {
         self.started.fetch_add(1, Ordering::Relaxed);
@@ -76,7 +76,7 @@ impl Actor for MySyncActor {
     }
 }
 
-impl actix::Handler<Num> for MySyncActor {
+impl actori::Handler<Num> for MySyncActor {
     type Result = ();
 
     fn handle(&mut self, msg: Num, ctx: &mut Self::Context) {
@@ -110,7 +110,7 @@ fn test_restart_sync_actor() {
 
         addr.do_send(Num(2));
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             let _ = addr.send(Num(4)).await;
             delay_for(Duration::new(0, 1_000_000)).await;
             System::current().stop();
@@ -142,7 +142,7 @@ impl IntervalActor {
 }
 
 impl Actor for IntervalActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
         self.instant = Some(Instant::now());

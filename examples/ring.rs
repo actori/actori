@@ -6,7 +6,7 @@
  * message round the ring M times so that a total of N * M messages
  * get sent. Time how long this takes for different values of N and M."
  */
-use actix::*;
+use actori::*;
 
 use std::env;
 use std::time::SystemTime;
@@ -43,11 +43,11 @@ impl Handler<Payload> for Node {
 }
 
 fn print_usage_and_exit() -> ! {
-    eprintln!("Usage; actix-test <num-nodes> <num-times-message-around-ring>");
+    eprintln!("Usage; actori-test <num-nodes> <num-times-message-around-ring>");
     ::std::process::exit(1);
 }
 
-#[actix_rt::main]
+#[actori_rt::main]
 async fn main() {
     let args = env::args().collect::<Vec<_>>();
     if args.len() < 3 {

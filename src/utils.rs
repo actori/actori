@@ -53,8 +53,8 @@ where
 /// ```rust
 /// # use std::io;
 /// use std::time::Duration;
-/// use actix::prelude::*;
-/// use actix::utils::TimerFunc;
+/// use actori::prelude::*;
+/// use actori::utils::TimerFunc;
 ///
 /// struct MyActor;
 ///
@@ -150,8 +150,8 @@ where
 /// ```rust
 /// # use std::io;
 /// use std::time::Duration;
-/// use actix::prelude::*;
-/// use actix::utils::IntervalFunc;
+/// use actori::prelude::*;
+/// use actori::utils::IntervalFunc;
 ///
 /// struct MyActor;
 ///

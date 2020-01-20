@@ -3,7 +3,7 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 
-use actix::prelude::*;
+use actori::prelude::*;
 use futures::channel::oneshot::{channel, Sender};
 use futures::FutureExt;
 use tokio::time::{delay_for, Duration};
@@ -17,7 +17,7 @@ struct MyActor {
 }
 
 impl Actor for MyActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 
     fn started(&mut self, _: &mut Self::Context) {
         self.started.store(true, Ordering::Relaxed);
@@ -49,7 +49,7 @@ struct MySyncActor {
 }
 
 impl Actor for MySyncActor {
-    type Context = actix::SyncContext<Self>;
+    type Context = actori::SyncContext<Self>;
 
     fn started(&mut self, _: &mut Self::Context) {
         self.started.store(true, Ordering::Relaxed);
@@ -121,7 +121,7 @@ fn test_stop_after_drop_address() {
         }
         .start();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::new(0, 100)).await;
             drop(addr);
             delay_for(Duration::new(0, 10_000)).await;
@@ -154,7 +154,7 @@ fn test_stop_after_drop_sync_address() {
         }
         .start();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::new(0, 100)).await;
             drop(addr);
             System::current().stop();
@@ -189,7 +189,7 @@ fn test_stop_after_drop_sync_actor() {
             restore_after_stop: false,
         });
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::from_secs(2)).await;
             assert!(started2.load(Ordering::Relaxed), "Not started");
             assert!(!stopping2.load(Ordering::Relaxed), "Stopping");
@@ -226,7 +226,7 @@ fn test_stop() {
         }
         .start();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::new(0, 100)).await;
             System::current().stop();
         });
@@ -257,7 +257,7 @@ fn test_stop_restore_after_stopping() {
         }
         .start();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::new(0, 100)).await;
             System::current().stop();
         });

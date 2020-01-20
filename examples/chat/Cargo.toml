@@ -26,6 +26,6 @@ serde_json = "1.0"
 tokio = { version = "0.2", default-features=false, features=["tcp", "time", "signal", "io-util"] }
 tokio-util = { version = "0.2", features = ["codec"] }
 
-actix = { path = "../../" }
-actix_derive = "0.5"
-actix-rt = "1.0"
+actori = { path = "../../" }
+actori_derive = "0.5"
+actori-rt = "1.0"

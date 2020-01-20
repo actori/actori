@@ -27,7 +27,7 @@ pub struct FutureResult<T, E, A> {
 /// # Examples
 ///
 /// ```
-/// use actix::{fut, Actor, Context};
+/// use actori::{fut, Actor, Context};
 ///
 /// struct MyActor;
 /// impl Actor for MyActor {
@@ -53,8 +53,8 @@ pub fn result<T, E, A>(r: Result<T, E>) -> FutureResult<T, E, A> {
 /// # Examples
 ///
 /// ```
-/// use actix::fut::*;
-/// use actix::{Actor, Context};
+/// use actori::fut::*;
+/// use actori::{Actor, Context};
 ///
 /// struct MyActor;
 /// impl Actor for MyActor {
@@ -75,7 +75,7 @@ pub fn ok<T, E, S>(t: T) -> FutureResult<T, E, S> {
 /// # Examples
 ///
 /// ```
-/// use actix::{fut, Actor, Context};
+/// use actori::{fut, Actor, Context};
 ///
 /// struct MyActor;
 /// impl Actor for MyActor {

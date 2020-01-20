@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use actix_rt::Arbiter;
+use actori_rt::Arbiter;
 use futures::Stream;
 use log::error;
 
@@ -106,7 +106,7 @@ pub trait Actor: Sized + Unpin + 'static {
     /// # Examples
     ///
     /// ```rust
-    /// use actix::*;
+    /// use actori::*;
     ///
     /// struct MyActor;
     /// impl Actor for MyActor {
@@ -154,7 +154,7 @@ pub trait Actor: Sized + Unpin + 'static {
             let act = f(&mut ctx);
             let fut = ctx.into_future(act);
 
-            actix_rt::spawn(fut);
+            actori_rt::spawn(fut);
         });
 
         Addr::new(tx)
@@ -168,7 +168,7 @@ pub trait Actor: Sized + Unpin + 'static {
     /// # Examples
     ///
     /// ```rust
-    /// use actix::*;
+    /// use actori::*;
     ///
     /// struct MyActor {
     ///     val: usize,
@@ -310,7 +310,7 @@ where
     ///
     /// ```rust
     /// # use std::io;
-    /// use actix::prelude::*;
+    /// use actori::prelude::*;
     /// use futures::stream::once;
     ///
     /// #[derive(Message)]
@@ -360,7 +360,7 @@ where
     /// errors.
     ///
     /// ```rust
-    /// use actix::prelude::*;
+    /// use actori::prelude::*;
     /// use futures::stream::once;
     ///
     /// #[derive(Message)]

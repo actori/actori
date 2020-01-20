@@ -5,12 +5,12 @@
 //! ```rust
 //! #![recursion_limit="128"]
 //! use futures::{future, FutureExt};
-//! use actix::prelude::*;
-//! use actix::actors::resolver;
+//! use actori::prelude::*;
+//! use actori::actors::resolver;
 //!
-//! #[actix_rt::main]
+//! #[actori_rt::main]
 //! async fn main() {
-//!         actix_rt::spawn(async {
+//!         actori_rt::spawn(async {
 //!             let resolver = resolver::Resolver::from_registry();
 //!
 //!             let addrs = resolver.send(
@@ -20,7 +20,7 @@
 //!             System::current().stop();
 //!        });
 //!
-//!         actix_rt::spawn(async {
+//!         actori_rt::spawn(async {
 //!             let resolver = resolver::Resolver::from_registry();
 //!
 //!             let stream = resolver.send(
@@ -146,9 +146,9 @@ pub enum ResolverError {
     IoError(io::Error),
 }
 
-/// `InternalServerError` for `actix::MailboxError`
+/// `InternalServerError` for `actori::MailboxError`
 #[cfg(feature = "http")]
-impl actix_http::ResponseError for ResolverError {}
+impl actori_http::ResponseError for ResolverError {}
 
 pub struct Resolver {
     resolver: Option<AsyncResolver>,

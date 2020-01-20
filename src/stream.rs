@@ -41,7 +41,7 @@ where
     /// allows to handle `Stream` in similar way as normal actor messages.
     ///
     /// ```rust
-    /// use actix::prelude::*;
+    /// use actori::prelude::*;
     /// use futures::stream::once;
     ///
     /// #[derive(Message)]

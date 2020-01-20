@@ -1,4 +1,4 @@
-//! Custom `Future` implementation with `Actix` support
+//! Custom `Future` implementation with `Actori` support
 
 use std::marker::PhantomData;
 use std::task::{Context, Poll};
@@ -49,7 +49,7 @@ use std::task;
 /// then updating the initiating actor's state:
 ///
 /// ```rust,no_run
-/// use actix::prelude::*;
+/// use actori::prelude::*;
 ///
 /// // The response type returned by the actor future
 /// type OriginalActorResponse = ();
@@ -107,7 +107,7 @@ use std::task;
 ///
 ///         // Wrap that `Future` so subsequent chained handlers can access
 ///         // the `actor` (`self` in the  synchronous code) as well as the context.
-///         let send_to_other = actix::fut::wrap_future::<_, Self>(send_to_other);
+///         let send_to_other = actori::fut::wrap_future::<_, Self>(send_to_other);
 ///
 ///         // once the wrapped future resolves, update this actor's state
 ///         let update_self = send_to_other.map(|result, actor, _ctx| {

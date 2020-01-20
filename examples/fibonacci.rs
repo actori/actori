@@ -3,7 +3,7 @@
 //! time. Sync arbiter can start multiple threads with separate instance of
 //! actor in each.
 
-use actix::prelude::*;
+use actori::prelude::*;
 
 struct Fibonacci(pub u32);
 
@@ -41,7 +41,7 @@ impl Handler<Fibonacci> for SyncActor {
     }
 }
 
-#[actix_rt::main]
+#[actori_rt::main]
 async fn main() {
     // start sync arbiter with 3 threads
     let addr = SyncArbiter::start(3, || SyncActor);

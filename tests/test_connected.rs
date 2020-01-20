@@ -1,4 +1,4 @@
-use actix::prelude::*;
+use actori::prelude::*;
 use std::time::Duration;
 use tokio::time::delay_for;
 
@@ -20,7 +20,7 @@ impl Actor for MyActor {
     }
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_connected() {
     Arbiter::spawn(async move {
         let addr = MyActor::start(MyActor);

@@ -1,7 +1,7 @@
-use actix::actors::resolver;
-use actix::prelude::*;
+use actori::actors::resolver;
+use actori::prelude::*;
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_resolver() {
     Arbiter::spawn(async {
         let resolver = resolver::Resolver::from_registry();

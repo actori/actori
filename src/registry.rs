@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use std::default::Default;
 use std::rc::Rc;
 
-use actix_rt::{Arbiter, System};
+use actori_rt::{Arbiter, System};
 use parking_lot::Mutex;
 
 use crate::actor::{Actor, Supervised};
@@ -30,7 +30,7 @@ type AnyMap = HashMap<TypeId, Box<dyn Any>>;
 /// # Example
 ///
 /// ```rust
-/// use actix::prelude::*;
+/// use actori::prelude::*;
 ///
 /// #[derive(Message)]
 /// #[rtype(result = "()")]
@@ -42,7 +42,7 @@ type AnyMap = HashMap<TypeId, Box<dyn Any>>;
 /// impl Actor for MyActor1 {
 ///     type Context = Context<Self>;
 /// }
-/// impl actix::Supervised for MyActor1 {}
+/// impl actori::Supervised for MyActor1 {}
 ///
 /// impl ArbiterService for MyActor1 {
 ///    fn service_started(&mut self, ctx: &mut Context<Self>) {
@@ -170,7 +170,7 @@ impl Registry {
 /// # Example
 ///
 /// ```rust
-/// use actix::prelude::*;
+/// use actori::prelude::*;
 ///
 /// #[derive(Message)]
 /// #[rtype(result = "()")]
@@ -182,7 +182,7 @@ impl Registry {
 /// impl Actor for MyActor1 {
 ///     type Context = Context<Self>;
 /// }
-/// impl actix::Supervised for MyActor1 {}
+/// impl actori::Supervised for MyActor1 {}
 ///
 /// impl SystemService for MyActor1 {
 ///     fn service_started(&mut self, ctx: &mut Context<Self>) {

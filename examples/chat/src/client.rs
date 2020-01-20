@@ -4,14 +4,14 @@ use std::{io, net, thread};
 
 use futures::FutureExt;
 
-use actix::prelude::*;
+use actori::prelude::*;
 use tokio::io::WriteHalf;
 use tokio::net::TcpStream;
 use tokio_util::codec::FramedRead;
 
 mod codec;
 
-#[actix_rt::main]
+#[actori_rt::main]
 async fn main() {
     println!("Running chat client");
 
@@ -23,7 +23,7 @@ async fn main() {
             let (r, w) = tokio::io::split(stream);
             ctx.add_stream(FramedRead::new(r, codec::ClientChatCodec));
             ChatClient {
-                framed: actix::io::FramedWrite::new(w, codec::ClientChatCodec, ctx),
+                framed: actori::io::FramedWrite::new(w, codec::ClientChatCodec, ctx),
             }
         });
 
@@ -47,7 +47,7 @@ async fn main() {
 }
 
 struct ChatClient {
-    framed: actix::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
+    framed: actori::io::FramedWrite<WriteHalf<TcpStream>, codec::ClientChatCodec>,
 }
 
 #[derive(Message)]
@@ -81,7 +81,7 @@ impl ChatClient {
     }
 }
 
-impl actix::io::WriteHandler<io::Error> for ChatClient {}
+impl actori::io::WriteHandler<io::Error> for ChatClient {}
 
 /// Handle stdin commands
 impl Handler<ClientCommand> for ChatClient {

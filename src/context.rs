@@ -104,7 +104,7 @@ where
     pub fn run(self, act: A) -> Addr<A> {
         let fut = self.into_future(act);
         let addr = fut.address();
-        actix_rt::spawn(fut);
+        actori_rt::spawn(fut);
         addr
     }
 
@@ -126,7 +126,7 @@ where
     /// The default mailbox capacity is 16 messages.
     /// #Examples
     /// ```
-    /// # use actix::prelude::*;
+    /// # use actori::prelude::*;
     /// struct MyActor;
     /// impl Actor for MyActor {
     ///     type Context = Context<Self>;

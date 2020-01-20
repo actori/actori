@@ -1,8 +1,8 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
-use actix::clock::{delay_for, Duration};
-use actix::prelude::*;
+use actori::clock::{delay_for, Duration};
+use actori::prelude::*;
 use futures::FutureExt;
 
 struct MyActor {
@@ -10,7 +10,7 @@ struct MyActor {
 }
 
 impl Actor for MyActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
         delay_for(Duration::new(0, 5_000_000))
@@ -49,7 +49,7 @@ struct MyStreamActor {
 }
 
 impl Actor for MyStreamActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
         let mut s = futures::stream::FuturesOrdered::new();

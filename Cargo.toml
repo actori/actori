@@ -1,25 +1,25 @@
 [package]
-name = "actix"
+name = "actori"
 version = "0.9.0"
-authors = ["Nikolay Kim <fafhrd91@gmail.com>"]
+authors = ["Christian Haynes <06chaynes@gmail.com>", "Nikolay Kim <fafhrd91@gmail.com>"]
 description = "Actor framework for Rust"
 readme = "README.md"
-keywords = ["actor", "futures", "actix", "async", "tokio"]
-homepage = "https://actix.rs"
-repository = "https://github.com/actix/actix.git"
-documentation = "https://docs.rs/actix/"
+keywords = ["actor", "futures", "actori", "async", "tokio"]
+homepage = "https://actori.t42x.net"
+repository = "https://github.com/actori/actori.git"
+documentation = "https://docs.rs/actori/"
 categories = ["network-programming", "asynchronous"]
 license = "MIT/Apache-2.0"
 exclude = [".gitignore", ".travis.yml", ".cargo/config", "appveyor.yml"]
 edition = "2018"
 
 [badges]
-travis-ci = { repository = "actix/actix", branch = "master" }
-appveyor = { repository = "actix/actix" }
-codecov = { repository = "actix/actix", branch = "master", service = "github" }
+travis-ci = { repository = "actori/actori", branch = "master" }
+appveyor = { repository = "actori/actori" }
+codecov = { repository = "actori/actori", branch = "master", service = "github" }
 
 [lib]
-name = "actix"
+name = "actori"
 path = "src/lib.rs"
 
 [workspace]
@@ -34,12 +34,12 @@ resolver = ["trust-dns-proto", "trust-dns-resolver"]
 # Adds assertion to prevent processing too many messages on event loop
 mailbox_assert = []
 
-# actix-http support
-http = ["actix-http"]
+# actori-http support
+http = ["actori-http"]
 
 [dependencies]
-actix-rt = "1.0.0"
-actix_derive = "0.5"
+actori-rt = "1.0.0"
+actori_derive = "0.5"
 bytes = "0.5.3"
 crossbeam-channel = "0.4"
 derive_more = "0.99.2"
@@ -53,8 +53,8 @@ parking_lot = "0.10"
 tokio = { version = "0.2.6", default-features = false, features=["rt-core", "rt-util", "io-driver", "tcp", "uds", "udp", "time", "signal", "sync"] }
 tokio-util   = { version = "0.2", features = ["full"] }
 
-# actix-http support
-actix-http = { version = "1.0.1", optional = true }
+# actori-http support
+actori-http = { version = "1.0.1", optional = true }
 
 # dns resolver
 trust-dns-proto = { version = "=0.18.0-alpha.2", optional = true, default-features = false }

@@ -1,7 +1,7 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
-use actix::prelude::*;
+use actori::prelude::*;
 use tokio::time::{delay_for, Duration};
 
 struct Die;
@@ -19,16 +19,16 @@ impl Actor for MyActor {
         self.0.fetch_add(1, Ordering::Relaxed);
     }
 }
-impl actix::Supervised for MyActor {
-    fn restarting(&mut self, _: &mut actix::Context<MyActor>) {
+impl actori::Supervised for MyActor {
+    fn restarting(&mut self, _: &mut actori::Context<MyActor>) {
         self.1.fetch_add(1, Ordering::Relaxed);
     }
 }
 
-impl actix::Handler<Die> for MyActor {
+impl actori::Handler<Die> for MyActor {
     type Result = ();
 
-    fn handle(&mut self, _: Die, ctx: &mut actix::Context<MyActor>) {
+    fn handle(&mut self, _: Die, ctx: &mut actori::Context<MyActor>) {
         self.2.fetch_add(1, Ordering::Relaxed);
         ctx.stop();
     }
@@ -48,12 +48,12 @@ fn test_supervisor_restart() {
 
     System::run(move || {
         let addr =
-            actix::Supervisor::start(move |_| MyActor(starts2, restarts2, messages2));
+            actori::Supervisor::start(move |_| MyActor(starts2, restarts2, messages2));
         addr.do_send(Die);
         addr.do_send(Die);
         *addr2.lock().unwrap() = Some(addr);
 
-        actix::spawn(async move {
+        actori::spawn(async move {
             delay_for(Duration::new(0, 100_000)).await;
             System::current().stop();
         });

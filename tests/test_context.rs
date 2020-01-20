@@ -2,7 +2,7 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
-use actix::prelude::*;
+use actori::prelude::*;
 use futures::channel::mpsc::unbounded;
 use futures::stream::once;
 use futures::StreamExt;
@@ -22,7 +22,7 @@ struct MyActor {
 }
 
 impl Actor for MyActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 
     fn started(&mut self, ctx: &mut Context<MyActor>) {
         match self.op {
@@ -88,7 +88,7 @@ fn test_add_timeout_cancel() {
     System::run(|| {
         let _addr = MyActor { op: Op::Cancel }.start();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::new(0, 1000)).await;
             System::current().stop();
         });
@@ -132,7 +132,7 @@ struct ContextWait {
 }
 
 impl Actor for ContextWait {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 }
 
 struct Ping;
@@ -218,7 +218,7 @@ struct ContextNoWait {
 }
 
 impl Actor for ContextNoWait {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 }
 
 impl Handler<Ping> for ContextNoWait {
@@ -230,12 +230,12 @@ impl Handler<Ping> for ContextNoWait {
     }
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_nowait_context() {
     let m = Arc::new(AtomicUsize::new(0));
     let cnt = Arc::clone(&m);
 
-    actix_rt::spawn(async move {
+    actori_rt::spawn(async move {
         let addr = ContextNoWait { cnt }.start();
         addr.do_send(Ping);
         addr.do_send(Ping);
@@ -247,12 +247,12 @@ async fn test_nowait_context() {
     assert_eq!(m.load(Ordering::Relaxed), 3);
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_message_stream_nowait_context() {
     let m = Arc::new(AtomicUsize::new(0));
     let m2 = Arc::clone(&m);
 
-    actix_rt::spawn(async move {
+    actori_rt::spawn(async move {
         let _addr = ContextNoWait::create(move |ctx| {
             let (tx, rx) = unbounded();
             let _ = tx.unbounded_send(Ping);
@@ -285,7 +285,7 @@ fn test_stream_nowait_context() {
             actor
         });
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::from_millis(200)).await;
             System::current().stop();
         });
@@ -310,7 +310,7 @@ fn test_notify() {
         });
         addr.do_send(Ping);
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::from_millis(200)).await;
             System::current().stop();
         });
@@ -399,7 +399,7 @@ impl StreamHandler<CancelPacket> for CancelHandler {
 
 #[test]
 fn test_cancel_handler() {
-    actix::System::run(|| {
+    actori::System::run(|| {
         CancelHandler::create(|ctx| CancelHandler {
             source: ctx.add_stream(
                 interval_at(Instant::now(), Duration::from_millis(1))
@@ -439,19 +439,19 @@ impl Handler<CancelMessage> for CancelLater {
 
 #[test]
 fn test_cancel_completed_with_no_context_item() {
-    actix::System::run(|| {
+    actori::System::run(|| {
         // first, spawn future that will complete immediately
         let addr = CancelLater { handle: None }.start();
 
         // then, cancel the future which would already be completed
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             delay_for(Duration::from_millis(100)).await;
             addr.do_send(CancelMessage);
         });
 
         // finally, terminate the actor, which shouldn't be blocked unless
         // the actor context ate up CPU time
-        actix_rt::spawn(async {
+        actori_rt::spawn(async {
             delay_for(Duration::from_millis(200)).await;
             System::current().stop();
         });

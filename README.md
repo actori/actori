@@ -1,11 +1,11 @@
-# Actix [![Build Status](https://travis-ci.org/actix/actix.svg?branch=master)](https://travis-ci.org/actix/actix) [![Build status](https://ci.appveyor.com/api/projects/status/aytxo1w6a88x2cxk/branch/master?svg=true)](https://ci.appveyor.com/project/fafhrd91/actix-n9e64/branch/master) [![codecov](https://codecov.io/gh/actix/actix/branch/master/graph/badge.svg)](https://codecov.io/gh/actix/actix) [![crates.io](http://meritbadge.herokuapp.com/actix)](https://crates.io/crates/actix) [![Join the chat at https://gitter.im/actix/actix](https://badges.gitter.im/actix/actix.svg)](https://gitter.im/actix/actix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Actori [![Build Status](https://travis-ci.org/actori/actori.svg?branch=master)](https://travis-ci.org/actori/actori) [![Build status](https://ci.appveyor.com/api/projects/status/aytxo1w6a88x2cxk/branch/master?svg=true)](https://ci.appveyor.com/project/fafhrd91/actori-n9e64/branch/master) [![codecov](https://codecov.io/gh/actori/actori/branch/master/graph/badge.svg)](https://codecov.io/gh/actori/actori) [![crates.io](http://meritbadge.herokuapp.com/actori)](https://crates.io/crates/actori) [![Join the chat at https://gitter.im/actori/actori](https://badges.gitter.im/actori/actori.svg)](https://gitter.im/actori/actori?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Actix is a Rust actors framework.
+Actori is a Rust actors framework.
 
-* [User Guide](https://actix.rs/book/actix/)
-* [API Documentation (Development)](http://actix.github.io/actix/actix/)
-* [API Documentation (Releases)](https://docs.rs/actix/)
-* Cargo package: [actix](https://crates.io/crates/actix)
+* [User Guide](https://actori.rs/book/actori/)
+* [API Documentation (Development)](http://actori.github.io/actori/actori/)
+* [API Documentation (Releases)](https://docs.rs/actori/)
+* Cargo package: [actori](https://crates.io/crates/actori)
 * Minimum supported Rust version: 1.39 or later
 
 ---
@@ -15,32 +15,32 @@ Actix is a Rust actors framework.
   * Async/Sync actors.
   * Actor communication in a local/thread context.
   * Uses [Futures](https://crates.io/crates/futures) for asynchronous message handling.
-  * HTTP1/HTTP2 support ([actix-web](https://github.com/actix/actix-web))
+  * HTTP1/HTTP2 support ([actori-web](https://github.com/actori/actori-web))
   * Actor supervision.
   * Typed messages (No `Any` type).
 
 ## Usage
 
-To use `actix`, add this to your `Cargo.toml`:
+To use `actori`, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-actix = "0.9"
+actori = "0.9"
 ```
 
-### Initialize Actix
+### Initialize Actori
 
-In order to use actix you first need to create a `System`.
+In order to use actori you first need to create a `System`.
 
 ```rust,ignore
 fn main() {
-    let system = actix::System::new("test");
+    let system = actori::System::new("test");
 
     system.run();
 }
 ```
 
-Actix uses the [tokio](https://github.com/tokio-rs/tokio) event loop.
+Actori uses the [tokio](https://github.com/tokio-rs/tokio) event loop.
 `System::new()` creates a new event loop and starts the `System` actor.
 `system.run()` starts the tokio event loop, and will finish once the `System` actor
 receives the `SystemExit` message.
@@ -50,10 +50,10 @@ Let's create a simple Actor.
 ### Implement an Actor
 
 In order to define an actor you need to define a struct and have it implement
-the [`Actor`](https://actix.github.io/actix/actix/trait.Actor.html) trait.
+the [`Actor`](https://actori.github.io/actori/actori/trait.Actor.html) trait.
 
 ```rust
-use actix::{Actor, Addr, Arbiter, Context, System};
+use actori::{Actor, Addr, Arbiter, Context, System};
 
 struct MyActor;
 
@@ -76,22 +76,22 @@ fn main() {
 ```
 
 Spawning a new actor is achieved via the `start` and `create` methods of
-the [Actor](https://actix.github.io/actix/actix/trait.Actor.html)
+the [Actor](https://actori.github.io/actori/actori/trait.Actor.html)
 trait. It provides several different ways of creating actors, for details check docs.
 You can implement `started`, `stopping` and `stopped` methods of the Actor trait.
 `started` gets called when actor starts and `stopping` when actor finishes.
-Check [API documentation](https://actix.github.io/actix/actix/trait.Actor.html#actor-lifecycle)
+Check [API documentation](https://actori.github.io/actori/actori/trait.Actor.html#actor-lifecycle)
 for more information on the actor lifecycle.
 
 ### Handle messages
 
-An Actor communicates with another Actor by sending messages. In actix all messages
+An Actor communicates with another Actor by sending messages. In actori all messages
 are typed. Let's define a simple `Sum` message with two `usize` parameters,
 and an actor which will accept this message and return the sum of those two numbers.
 
 ```rust
 use futures::{future, Future};
-use actix::*;
+use actori::*;
 
 // this is our Message
 struct Sum(usize, usize);
@@ -152,7 +152,7 @@ a new actor that uses `Recipient`.
 
 ```rust
 use std::time::Duration;
-use actix::prelude::*;
+use actori::prelude::*;
 
 #[derive(Message)]
 struct Ping { pub id: usize }
@@ -211,13 +211,13 @@ fn main() {
 ### chat example
 
 There is a
-[chat example](https://github.com/actix/actix/tree/master/examples/chat)
+[chat example](https://github.com/actori/actori/tree/master/examples/chat)
 which provides a basic example of networking client/server service.
 
 ### fectl
 
 You may consider checking out [fectl](https://github.com/fafhrd91/fectl) utility. It is written
-with `actix` and shows how to create networking application with relatively complex interactions.
+with `actori` and shows how to create networking application with relatively complex interactions.
 
 ## Contributing
 
@@ -236,6 +236,6 @@ at your option.
 
 ## Code of Conduct
 
-Contribution to the actix crate is organized under the terms of the
-Contributor Covenant, the maintainer of actix, @fafhrd91, promises to
+Contribution to the actori crate is organized under the terms of the
+Contributor Covenant, the maintainer of actori, @fafhrd91, promises to
 intervene to uphold that code of conduct.

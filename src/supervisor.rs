@@ -1,7 +1,7 @@
 use std::pin::Pin;
 use std::task::{self, Poll};
 
-use actix_rt::Arbiter;
+use actori_rt::Arbiter;
 use futures::Future;
 
 use crate::actor::{Actor, AsyncContext, Supervised};
@@ -28,7 +28,7 @@ use crate::mailbox::DEFAULT_CAPACITY;
 /// ## Example
 ///
 /// ```rust
-/// # use actix::prelude::*;
+/// # use actori::prelude::*;
 /// #[derive(Message)]
 /// #[rtype(result = "()")]
 /// struct Die;
@@ -40,7 +40,7 @@ use crate::mailbox::DEFAULT_CAPACITY;
 /// }
 ///
 /// // To use actor with supervisor actor has to implement `Supervised` trait
-/// impl actix::Supervised for MyActor {
+/// impl actori::Supervised for MyActor {
 ///     fn restarting(&mut self, ctx: &mut Context<MyActor>) {
 ///         println!("restarting");
 ///     }
@@ -57,7 +57,7 @@ use crate::mailbox::DEFAULT_CAPACITY;
 ///
 /// fn main() {
 ///     System::run(|| {
-///         let addr = actix::Supervisor::start(|_| MyActor);
+///         let addr = actori::Supervisor::start(|_| MyActor);
 ///
 ///         addr.do_send(Die);
 ///     });
@@ -82,18 +82,18 @@ where
     /// _>` type as type of a variable.
     ///
     /// ```rust
-    /// # use actix::prelude::*;
+    /// # use actori::prelude::*;
     /// struct MyActor;
     ///
     /// impl Actor for MyActor {
     ///     type Context = Context<Self>;
     /// }
     ///
-    /// # impl actix::Supervised for MyActor {}
+    /// # impl actori::Supervised for MyActor {}
     /// # fn main() {
     /// #    System::run(|| {
     /// // Get `Addr` of a MyActor actor
-    /// let addr = actix::Supervisor::start(|_| MyActor);
+    /// let addr = actori::Supervisor::start(|_| MyActor);
     /// #         System::current().stop();
     /// # });}
     /// ```
@@ -109,7 +109,7 @@ where
         let fut = ctx.into_future(act);
 
         // create supervisor
-        actix_rt::spawn(Self { fut });
+        actori_rt::spawn(Self { fut });
 
         addr
     }
@@ -127,7 +127,7 @@ where
             let act = f(&mut ctx);
             let fut = ctx.into_future(act);
 
-            actix_rt::spawn(Self { fut });
+            actori_rt::spawn(Self { fut });
         });
 
         Addr::new(tx)

@@ -1,8 +1,8 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use actix::io::SinkWrite;
-use actix::prelude::*;
+use actori::io::SinkWrite;
+use actori::prelude::*;
 use bytes::{Buf, Bytes};
 use futures::{channel::mpsc, sink::Sink, StreamExt};
 
@@ -79,10 +79,10 @@ struct MyActor {
 }
 
 impl Actor for MyActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 }
 
-impl actix::io::WriteHandler<()> for MyActor {
+impl actori::io::WriteHandler<()> for MyActor {
     fn finished(&mut self, _ctxt: &mut Self::Context) {
         System::current().stop();
     }
@@ -98,11 +98,11 @@ impl Handler<Data> for MyActor {
     }
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_send_1() {
     let (sender, receiver) = mpsc::unbounded();
 
-    actix_rt::spawn(async move {
+    actori_rt::spawn(async move {
         let addr = MyActor::create(move |ctxt| {
             let sink = MySink {
                 sender,
@@ -125,11 +125,11 @@ async fn test_send_1() {
     assert_eq!(b"Hello", &res[..]);
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_send_2() {
     let (sender, receiver) = mpsc::unbounded();
 
-    actix_rt::spawn(async move {
+    actori_rt::spawn(async move {
         let addr = MyActor::create(move |ctxt| {
             let sink = MySink {
                 sender,
@@ -159,10 +159,10 @@ async fn test_send_2() {
     assert_eq!(b"Hello world", &res[..]);
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_send_error() {
     let (sender, receiver) = mpsc::unbounded();
-    actix_rt::spawn(async move {
+    actori_rt::spawn(async move {
         let addr = MyActor::create(move |ctxt| {
             let sink = MySink {
                 sender,
@@ -192,10 +192,10 @@ struct AnotherActor {
 }
 
 impl Actor for AnotherActor {
-    type Context = actix::Context<Self>;
+    type Context = actori::Context<Self>;
 }
 
-impl actix::io::WriteHandler<mpsc::SendError> for AnotherActor {
+impl actori::io::WriteHandler<mpsc::SendError> for AnotherActor {
     fn finished(&mut self, _ctxt: &mut Self::Context) {
         System::current().stop();
     }
@@ -211,13 +211,13 @@ impl Handler<Data> for AnotherActor {
     }
 }
 
-#[actix_rt::test]
+#[actori_rt::test]
 async fn test_send_bytes() {
     let (sender, mut receiver) = mpsc::unbounded();
     let bytes = Bytes::from_static(b"Hello");
     let expected_bytes = bytes.clone();
 
-    actix_rt::spawn(async move {
+    actori_rt::spawn(async move {
         let addr = AnotherActor::create(move |ctxt| AnotherActor {
             sink: SinkWrite::new(sender, ctxt),
         });

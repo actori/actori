@@ -1,4 +1,4 @@
-use actix::prelude::*;
+use actori::prelude::*;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
@@ -25,7 +25,7 @@ impl Actor for MyActor {
 impl Handler<Ping> for MyActor {
     type Result = ();
 
-    fn handle(&mut self, _: Ping, _: &mut actix::Context<MyActor>) {
+    fn handle(&mut self, _: Ping, _: &mut actori::Context<MyActor>) {
         self.0
             .store(self.0.load(Ordering::Relaxed) + 1, Ordering::Relaxed);
         System::current().stop();
@@ -35,7 +35,7 @@ impl Handler<Ping> for MyActor {
 impl Handler<Panic> for MyActor {
     type Result = ();
 
-    fn handle(&mut self, _: Panic, _: &mut actix::Context<MyActor>) {
+    fn handle(&mut self, _: Panic, _: &mut actori::Context<MyActor>) {
         panic!("Whoops!");
     }
 }
@@ -48,7 +48,7 @@ fn test_start_actor_message() {
     System::run(move || {
         let arbiter = Arbiter::new();
 
-        actix_rt::spawn(async move {
+        actori_rt::spawn(async move {
             let res = arbiter.exec(|| MyActor(act_count).start()).await;
             res.unwrap().do_send(Ping(1));
         });

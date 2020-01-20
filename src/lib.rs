@@ -1,8 +1,8 @@
-//! # Actix is a rust actors framework
+//! # Actori is a rust actors framework
 //!
-//! [Actors](https://actix.github.io/actix/actix/trait.Actor.html) are
+//! [Actors](https://actori.github.io/actori/actori/trait.Actor.html) are
 //! objects which encapsulate state and behavior, they communicate
-//! exclusively by exchanging messages. Actix actors are implemented
+//! exclusively by exchanging messages. Actori actors are implemented
 //! on top of [Tokio](https://tokio.rs).  Multiple actors can run in
 //! same thread. Actors can run in multiple threads using the
 //! [`Arbiter`](struct.Arbiter.html) API. Actors exchange typed
@@ -10,10 +10,10 @@
 //!
 //! ## Documentation
 //!
-//! * [User Guide](https://actix.rs/book/actix/)
-//! * [Chat on gitter](https://gitter.im/actix/actix)
-//! * [GitHub repository](https://github.com/actix/actix)
-//! * [Cargo package](https://crates.io/crates/actix)
+//! * [User Guide](https://actori.rs/book/actori/)
+//! * [Chat on gitter](https://gitter.im/actori/actori)
+//! * [GitHub repository](https://github.com/actori/actori)
+//! * [Cargo package](https://crates.io/crates/actori)
 //! * Minimum supported Rust version: 1.39 or later
 //!
 //! ## Features
@@ -21,17 +21,17 @@
 //! * Async/Sync actors.
 //! * Actor communication in a local/thread context.
 //! * Using Futures for asynchronous message handling.
-//! * HTTP1/HTTP2 support ([actix-web](https://github.com/actix/actix-web))
+//! * HTTP1/HTTP2 support ([actori-web](https://github.com/actori/actori-web))
 //! * Actor supervision.
 //! * Typed messages (No `Any` type). Generic messages are allowed.
 //!
 //! ## Package feature
 //!
-//! * `resolver` - enables dns resolver actor, `actix::actors::resolver`
+//! * `resolver` - enables dns resolver actor, `actori::actors::resolver`
 //!
 //! ## Tokio runtime
 //!
-//! At the moment actix uses
+//! At the moment actori uses
 //! [`current_thread`](https://docs.rs/tokio/0.1.13/tokio/runtime/current_thread/index.html) runtime.
 //!
 //! While it provides minimum overhead, it has its own limits:
@@ -39,9 +39,9 @@
 //! - You cannot use tokio's async file I/O, as it relies on blocking calls that are not available
 //! in `current_thread`
 //! - `Stdin`, `Stderr` and `Stdout` from `tokio::io` are the same as file I/O in that regard and
-//! cannot be used in asynchronous manner in actix.
+//! cannot be used in asynchronous manner in actori.
 #[doc(hidden)]
-pub use actix_derive::*;
+pub use actori_derive::*;
 
 #[cfg(test)]
 doc_comment::doctest!("../README.md");
@@ -65,7 +65,7 @@ pub mod registry;
 pub mod sync;
 pub mod utils;
 
-pub use actix_rt::{Arbiter, System, SystemRunner};
+pub use actori_rt::{Arbiter, System, SystemRunner};
 
 pub use crate::actor::{
     Actor, ActorContext, ActorState, AsyncContext, Running, SpawnHandle, Supervised,
@@ -87,19 +87,19 @@ pub use crate::sync::{SyncArbiter, SyncContext};
 pub use crate::context::ContextFutureSpawner;
 
 pub mod prelude {
-    //! The `actix` prelude.
+    //! The `actori` prelude.
     //!
-    //! The purpose of this module is to alleviate imports of many common actix
-    //! traits by adding a glob import to the top of actix heavy modules:
+    //! The purpose of this module is to alleviate imports of many common actori
+    //! traits by adding a glob import to the top of actori heavy modules:
     //!
     //! ```
     //! # #![allow(unused_imports)]
-    //! use actix::prelude::*;
+    //! use actori::prelude::*;
     //! ```
 
     #[doc(hidden)]
-    pub use actix_derive::*;
-    pub use actix_rt::{Arbiter, System, SystemRunner};
+    pub use actori_derive::*;
+    pub use actori_rt::{Arbiter, System, SystemRunner};
 
     pub use crate::actor::{
         Actor, ActorContext, ActorState, AsyncContext, Running, SpawnHandle, Supervised,
@@ -128,14 +128,14 @@ pub mod prelude {
 }
 
 pub mod dev {
-    //! The `actix` prelude for library developers.
+    //! The `actori` prelude for library developers.
     //!
-    //! The purpose of this module is to alleviate imports of many common actix
-    //! traits by adding a glob import to the top of actix heavy modules:
+    //! The purpose of this module is to alleviate imports of many common actori
+    //! traits by adding a glob import to the top of actori heavy modules:
     //!
     //! ```
     //! # #![allow(unused_imports)]
-    //! use actix::dev::*;
+    //! use actori::dev::*;
     //! ```
 
     pub use crate::prelude::*;
@@ -156,7 +156,7 @@ pub mod dev {
 ///
 /// This function does the following:
 ///
-/// * Creates and starts the actix system with default configuration.
+/// * Creates and starts the actori system with default configuration.
 /// * Spawns the given future onto the current arbiter.
 /// * Blocks the current thread until the system shuts down.
 ///
@@ -170,35 +170,35 @@ pub mod dev {
 /// use tokio::time::delay_for;
 ///
 /// fn main() {
-///   actix::run(async move {
+///   actori::run(async move {
 ///       delay_for(Duration::from_millis(100)).await;
-///       actix::System::current().stop();
+///       actori::System::current().stop();
 ///   });
 /// }
 /// ```
 ///
 /// # Panics
 ///
-/// This function panics if the actix system is already running.
+/// This function panics if the actori system is already running.
 pub fn run<R>(f: R) -> std::io::Result<()>
 where
     R: futures::Future<Output = ()> + 'static,
 {
-    Ok(actix_rt::System::new("Default").block_on(f))
+    Ok(actori_rt::System::new("Default").block_on(f))
 }
 
 /// Spawns a future on the current arbiter.
 ///
 /// # Panics
 ///
-/// This function panics if the actix system is not running.
+/// This function panics if the actori system is not running.
 pub fn spawn<F>(f: F)
 where
     F: futures::Future<Output = ()> + 'static,
 {
-    actix_rt::spawn(f);
+    actori_rt::spawn(f);
 }
 
-/// `InternalServerError` for `actix::MailboxError`
+/// `InternalServerError` for `actori::MailboxError`
 #[cfg(feature = "http")]
-impl actix_http::ResponseError for MailboxError {}
+impl actori_http::ResponseError for MailboxError {}

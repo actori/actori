@@ -12,7 +12,7 @@ use std::sync::Arc;
 use std::task::Poll;
 use std::{task, thread};
 
-use actix_rt::System;
+use actori_rt::System;
 use crossbeam_channel as cb_channel;
 use futures::channel::oneshot::Sender as SyncSender;
 use futures::{Future, StreamExt};
@@ -36,7 +36,7 @@ use crate::handler::{Handler, Message, MessageResponse};
 /// ## Example
 ///
 /// ```rust
-/// use actix::prelude::*;
+/// use actori::prelude::*;
 ///
 /// struct Fibonacci(pub u32);
 ///
@@ -126,7 +126,7 @@ where
         }
 
         let (tx, rx) = channel::channel(0);
-        actix_rt::spawn(Self {
+        actori_rt::spawn(Self {
             queue: Some(sender),
             msgs: rx,
         });
@@ -196,7 +196,7 @@ where
 /// ## Example
 ///
 /// ```rust
-/// use actix::prelude::*;
+/// use actori::prelude::*;
 ///
 /// # struct Fibonacci(pub u32);
 ///

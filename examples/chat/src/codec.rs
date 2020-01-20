@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 use std::io;
 
-use actix::Message;
+use actori::Message;
 use byteorder::{BigEndian, ByteOrder};
 use bytes::{Buf, BufMut, BytesMut};
 use serde_derive::{Deserialize, Serialize};

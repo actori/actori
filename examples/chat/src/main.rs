@@ -2,7 +2,7 @@
 use std::net;
 use std::str::FromStr;
 
-use actix::prelude::*;
+use actori::prelude::*;
 use futures::StreamExt;
 use tokio::net::{TcpListener, TcpStream};
 use tokio_util::codec::FramedRead;
@@ -44,12 +44,12 @@ impl Handler<TcpConnect> for Server {
         ChatSession::create(move |ctx| {
             let (r, w) = tokio::io::split(msg.0);
             ChatSession::add_stream(FramedRead::new(r, ChatCodec), ctx);
-            ChatSession::new(server, actix::io::FramedWrite::new(w, ChatCodec, ctx))
+            ChatSession::new(server, actori::io::FramedWrite::new(w, ChatCodec, ctx))
         });
     }
 }
 
-#[actix_rt::main]
+#[actori_rt::main]
 async fn main() {
     // Start chat server actor
     let server = ChatServer::default().start();
